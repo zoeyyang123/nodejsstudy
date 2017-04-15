@@ -173,13 +173,62 @@ sudo fuser -n tcp 3000
 sudo kill 14117
 ```
 
+- **Net模块一个理解方式 pipe**
 
+关于数据交互，我们可以想象成，Server 与 Client 之间建立了一个管道（pipe），这个管道有两个分支，一个是用于发送 S 到 C 的数据，一个是用于发送 C 到 S 的数据。
 
+***Server：***
 
+```javascript
+// server.js
+var net = require('net');
+var server = net.createServer(function(socket) { //'connection' listener
+    console.log('server connected');
+    socket.on('end', function() {
+        console.log('server disconnected');
+    });
+    socket.on('data', function(){
+        socket.end('hello\r\n');
+    });
+});
+server.listen(8124, function() { //'listening' listener
+    console.log('server bound');
+});
+```
 
+>这里的creatServer就是创建了一个TCP服务，服务绑定（通过server.listen）在8124端口上。
+>
+>创建server之后有一个回调函数，这个回调函数的实现方式如下
 
+```JavaScript
+net.createServer = function(callback){
+    // 每次客户端连接都会新建一个 socket
+    var socket = new Socket();
+    callback && callback(socket);
+};
+```
 
+> 在调用上面函数的时候传入一个参数，这个参数也是函数，并且接受了 socket ，这个由其他方法构造的一个管道（pipe），他的作用就是用来数据交互的。第一节中我们说到了，pipe 是需要 Client 跟 Server 打招呼才能建立的，如果此刻没有客户端访问 Server，这个 socket 就不会存在了。
 
+***Client:***
+
+```javascript
+// client.js
+var net = require("net");
+var client = net.connect({port: 8124}, function(){
+    console.log('client connected');
+    client.write('world!\r\n');
+});
+client.on('data', function(data) {
+    console.log(data.toString());
+    client.end();
+});
+client.on('end', function() {
+    console.log('client disconnected');
+});
+```
+
+> `net.connect` 顾名思义，就是连接到服务端，第一个参数是对象，设置端口（port）为 8124，也就是我们服务器监听的端口，由于没有设置 host 参数，那默认就是 localhost （本地）。在 Server 中，socket 是管道的一端，而在 client 中，client 本身就是管道的一端，如果是多个客户端连接 Server，Server 会新建多个 socket，每个 socket 对应一个 client。
 
 
 

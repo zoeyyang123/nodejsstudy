@@ -12,3 +12,7 @@ if(result < 0) {
 }else {
     console.log(buffer1 + " 在 " + buffer2 + "之后");
 }
+
+var url = require('url');
+var a = url.parse('http://user:pass@host.com:8080/p/a/t/h?query=string#hash');
+console.log(a);

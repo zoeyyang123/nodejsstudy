@@ -230,7 +230,11 @@ module.exports = {
 };
 ```
 
-
+建立连接池可以更好的与MySQL交互，因为不会有自动断开等问题，但是连接池最多可以有10个连接，超过的部分不予反应。因此在调用连接`pool.getConnection`之后，一定要释放连接`connection.release();`
+http://www.cnblogs.com/Leo_wl/p/4361289.html
+http://www.cnblogs.com/zhongweiv/p/nodejs_mysql.html
+http://www.tuicool.com/articles/JfqYN3I
+http://pan.baidu.com/s/1eo3ZC
 
 
 

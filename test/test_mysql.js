@@ -45,7 +45,7 @@ connection.query(userAddSql,userAddSql_Params,function (err, result) {
 
 var  userDelSql = 'DELETE FROM userinfo';
 //删
-/*connection.query(userDelSql,function (err, result) {
+connection.query(userDelSql,function (err, result) {
     if(err){
         console.log('[DELETE ERROR] - ',err.message);
         return;
@@ -54,7 +54,7 @@ var  userDelSql = 'DELETE FROM userinfo';
     console.log('--------------------------DELETE----------------------------');
     console.log('DELETE affectedRows',result.affectedRows);
     console.log('-----------------------------------------------------------------\n\n');
-});*/
+});
 
 
 connection.end(function(err){

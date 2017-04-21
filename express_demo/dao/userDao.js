@@ -7,9 +7,9 @@ var mysql = require('mysql');
 var dbconf = require('../conf/db');
 //var util = require('util');
 var $sql = require('./usermqlMapping');
-
 // 使用连接池，提升性能???????????
 var pool  = mysql.createPool(Object.assign({}, dbconf.mysql));
+
 
 // 向前台返回JSON方法的简单封装
 var jsonWrite = function (res, ret) {
@@ -32,22 +32,20 @@ module.exports = {
             // 建立连接，向表中插入值
             // 'INSERT INTO ' + tablename + '(Id, UserName, UserPass) VALUES(0,?,?)',
             connection.query($sql.insert, [param.UserName, param.UserPass], function(err, result) {
-/*                if(result) {
+                if(result) {
                     result = {
                         code: 200,
                         msg:'增加成功'
                     };
-                }*/
-
-                // 以json形式，把操作结果返回给前台页面
+                }
+                console.log(result);
                // jsonWrite(res, result);
-//                console.log(result);
                 // 释放连接
                 connection.release();
             });
         });
     },
-    /*    delete: function (req, res) {
+    delete: function (req, res) {
         // delete by Id
         pool.getConnection(function(err, connection) {
             var id = +req.query.id;
@@ -109,7 +107,7 @@ module.exports = {
                 connection.release();
             });
         });
-    },*/
+    },
     findOne : function(uname){
         var res = uname;
         pool.getConnection(function(err, connection){
@@ -118,14 +116,15 @@ module.exports = {
                 //jsonWrite(res, result);
                 if(err) throw err;
  //               console.log($sql.findOne);
- //               console.log(uname);
+                console.log(result);
  //               res = result;
-                connection.release();
+
             });
-//            console.log(res);
-//            return res;
+            connection.release();
         });
-    },
+
+
+    }
 };
 
 

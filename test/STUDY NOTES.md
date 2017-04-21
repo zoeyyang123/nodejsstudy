@@ -146,24 +146,6 @@ Node.js中文支持有问题，在服务器建立时可以如下更改：
 res.writeHead(200, {'Content-Type': 'text/plain ; charset=utf8'});
 ```
 
-- **URL解析**
-
-```JavaScript
-var http = require('http');
-var url = require('url');
-var util = require('util');
- 
-http.createServer(function(req, res){
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    // 解析 url 参数
-    var params = url.parse(req.url, true).query;
-    res.write("网站名：" + params.name);
-    res.write("\n");
-    res.write("网站 URL：" + params.url);
-    res.end();
- 
-}).listen(3000);
-```
 
 - **监听端口被占用时解决办法----小TIPS**
 
@@ -229,6 +211,61 @@ client.on('end', function() {
 ```
 
 > `net.connect` 顾名思义，就是连接到服务端，第一个参数是对象，设置端口（port）为 8124，也就是我们服务器监听的端口，由于没有设置 host 参数，那默认就是 localhost （本地）。在 Server 中，socket 是管道的一端，而在 client 中，client 本身就是管道的一端，如果是多个客户端连接 Server，Server 会新建多个 socket，每个 socket 对应一个 client。
+
+- **URL解析**
+
+***举个栗子***
+
+```JavaScript
+var http = require('http');
+var url = require('url');
+var util = require('util');
+ 
+http.createServer(function(req, res){
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    // 解析 url 参数
+    var params = url.parse(req.url, true).query;
+    res.write("网站名：" + params.name);
+    res.write("\n");
+    res.write("网站 URL：" + params.url);
+    res.end();
+ 
+}).listen(3000);
+```
+这里最常用的就是这句话
+
+```JavaScript
+var params = url.parse(req.url, true).query;
+```
+
+还有
+
+```JavaScript
+var pathname = url.parse(request.url).pathname;
+```
+
+都是提取url中的某一部分，利用```url.parse()```,括号里的true似乎可写可不写。
+
+```javascript
+var a = url.parse('http://user:pass@host.com:8080/p/a/t/h?query=string#hash');
+console.log(a);
+```
+
+会输出：
+
+> Url {
+>   protocol: 'http:',
+>   slashes: true,
+>   auth: 'user:pass',
+>   host: 'host.com:8080',
+>   port: '8080',
+>   hostname: 'host.com',
+>   hash: '#hash',
+>   search: '?query=string',
+>   query: 'query=string',
+>   pathname: '/p/a/t/h',
+>   path: '/p/a/t/h?query=string',
+>   href: 'http://user:pass@host.com:8080/p/a/t/h?query=string#hash' }
 
 
 

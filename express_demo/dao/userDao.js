@@ -24,7 +24,7 @@ var jsonWrite = function (res, ret) {
 };
 
 module.exports = {
-    add: function (req) {
+    add: function (req,callback) {
         pool.getConnection(function(err, connection) {
             // 获取前台页面传过来的参数
             var param = req;
@@ -32,15 +32,11 @@ module.exports = {
             // 建立连接，向表中插入值
             // 'INSERT INTO ' + tablename + '(Id, UserName, UserPass) VALUES(0,?,?)',
             connection.query($sql.insert, [param.UserName, param.UserPass], function(err, result) {
-                if(result) {
-                    result = {
-                        code: 200,
-                        msg:'增加成功'
-                    };
-                }
+
                 console.log(result);
                // jsonWrite(res, result);
                 // 释放连接
+                callback(err, result);
                 connection.release();
             });
         });
@@ -116,15 +112,27 @@ module.exports = {
                 //jsonWrite(res, result);
                 if(err) throw err;
  //               console.log($sql.findOne);
-                console.log(result);
+//                console.log(result);
  //               res = result;
-
+                callback(err, result);
             });
             connection.release();
-            callback();
         });
-
-
+    },
+    checkOne : function(uname, callback){
+        var res = uname;
+        pool.getConnection(function(err, connection){
+            if(err) throw err;
+            connection.query($sql.checkOne, uname, function (err, result) {
+                //jsonWrite(res, result);
+                if(err) throw err;
+                //               console.log($sql.findOne);
+//                console.log(result);
+                //               res = result;
+                callback(err, result);
+            });
+            connection.release();
+        });
     }
 };
 

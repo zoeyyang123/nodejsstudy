@@ -9,7 +9,7 @@ var user = {
     queryById: 'select * from ' + tablename + ' where Id=?',
     queryAll: 'select * from ' + tablename,
     findOne:'select * from ' + tablename + ' where UserName=?',
-    checkOne:'select UserPass ' + tablename + ' where UserName=?'
+    checkOne:'select UserPass from ' + tablename + ' where UserName=?'
 };
 
 module.exports = user;

@@ -108,7 +108,7 @@ module.exports = {
             });
         });
     },
-    findOne : function(uname){
+    findOne : function(uname, callback){
         var res = uname;
         pool.getConnection(function(err, connection){
             if(err) throw err;
@@ -121,6 +121,7 @@ module.exports = {
 
             });
             connection.release();
+            callback();
         });
 
 
